@@ -80,7 +80,7 @@
     revealEls.forEach((el) => el.classList.add("is-visible"));
   }
 
-  const parallaxRoots = document.querySelectorAll("[data-parallax], .silent__bg");
+  const parallaxRoots = document.querySelectorAll("[data-parallax]");
 
   const updateParallax = () => {
     if (reduceMotion || !parallaxRoots.length) return;
