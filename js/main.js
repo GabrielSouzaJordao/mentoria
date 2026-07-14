@@ -12,13 +12,11 @@
     yearEl.textContent = String(new Date().getFullYear());
   }
 
-  /* —— Header state —— */
   const updateHeader = () => {
     if (!header) return;
     header.classList.toggle("is-scrolled", window.scrollY > 40);
   };
 
-  /* —— Scroll progress —— */
   const updateProgress = () => {
     if (!progress) return;
     const doc = document.documentElement;
@@ -27,7 +25,6 @@
     progress.style.width = `${value}%`;
   };
 
-  /* —— Mobile nav —— */
   const closeNav = () => {
     header?.classList.remove("nav-open");
     navToggle?.setAttribute("aria-expanded", "false");
@@ -46,7 +43,6 @@
     link.addEventListener("click", closeNav);
   });
 
-  /* —— Smooth anchor offset (native + fallback) —— */
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener("click", (event) => {
       const id = anchor.getAttribute("href");
@@ -59,7 +55,6 @@
     });
   });
 
-  /* —— Scroll reveal —— */
   const revealEls = document.querySelectorAll(".reveal");
 
   if (reduceMotion) {
@@ -73,12 +68,11 @@
           observer.unobserve(entry.target);
         });
       },
-      { threshold: 0.16, rootMargin: "0px 0px -8% 0px" }
+      { threshold: 0.12, rootMargin: "0px 0px -6% 0px" }
     );
 
     revealEls.forEach((el) => revealObserver.observe(el));
 
-    // Hero immediately
     document.querySelectorAll(".hero .reveal").forEach((el) => {
       requestAnimationFrame(() => el.classList.add("is-visible"));
     });
@@ -86,13 +80,12 @@
     revealEls.forEach((el) => el.classList.add("is-visible"));
   }
 
-  /* —— Parallax —— */
-  const parallaxNodes = document.querySelectorAll("[data-parallax]");
+  const parallaxRoots = document.querySelectorAll("[data-parallax], .silent__bg");
 
   const updateParallax = () => {
-    if (reduceMotion || !parallaxNodes.length) return;
+    if (reduceMotion || !parallaxRoots.length) return;
 
-    parallaxNodes.forEach((node) => {
+    parallaxRoots.forEach((node) => {
       const rect = node.getBoundingClientRect();
       const viewH = window.innerHeight;
       if (rect.bottom < 0 || rect.top > viewH) return;
@@ -106,7 +99,6 @@
     });
   };
 
-  /* —— FAQ: only one open —— */
   const faqItems = document.querySelectorAll(".faq__item");
   faqItems.forEach((item) => {
     item.addEventListener("toggle", () => {
@@ -117,11 +109,10 @@
     });
   });
 
-  /* —— Subtle counter pulse on results words —— */
   const resultWords = document.querySelectorAll(".results__word");
   if (!reduceMotion && "IntersectionObserver" in window) {
     let animated = false;
-    const resultsSection = document.getElementById("resultados");
+    const resultsSection = document.getElementById("transformacao");
     if (resultsSection) {
       const resultsObserver = new IntersectionObserver(
         (entries) => {
@@ -129,11 +120,10 @@
             if (!entry.isIntersecting || animated) return;
             animated = true;
             resultWords.forEach((word, index) => {
-              word.style.transitionDelay = `${index * 0.12}s`;
               word.style.opacity = "0";
               word.style.transform = "translateY(20px)";
               requestAnimationFrame(() => {
-                word.style.transition = "opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1), color 0.4s ease";
+                word.style.transition = `opacity 0.8s cubic-bezier(0.22,1,0.36,1) ${index * 0.12}s, transform 0.8s cubic-bezier(0.22,1,0.36,1) ${index * 0.12}s, color 0.4s ease`;
                 word.style.opacity = "1";
                 word.style.transform = "translateY(0)";
               });
@@ -147,7 +137,6 @@
     }
   }
 
-  /* —— RAF scroll loop —— */
   let ticking = false;
   const onScroll = () => {
     if (ticking) return;
